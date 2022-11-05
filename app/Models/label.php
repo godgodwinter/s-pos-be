@@ -8,23 +8,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class label extends Model
 {
-        public $table = "label";
+    public $table = "label";
 
-        use SoftDeletes;
-        use HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
-        protected $fillable = [
-            'nama',
-            'prefix',
-            'photo',
-            'desc',
-            'parrent_id',
-        ];
+    protected $fillable = [
+        'nama',
+        'prefix',
+        'photo',
+        'desc',
+        'parrent_id',
+    ];
 
-        // public function tapel()
-        // {
-        //     return $this->belongsTo('App\Models\tapel');
-        //     return $this->belongsTo(User::class,'users_id','id');
-        // }
+    // public function tapel()
+    // {
+    //     return $this->belongsTo('App\Models\tapel');
+    //     return $this->belongsTo(User::class,'users_id','id');
+    // }
 
 }

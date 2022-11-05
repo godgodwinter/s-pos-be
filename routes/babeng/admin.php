@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\adminAdministratorController;
+use App\Http\Controllers\admin\adminLabelController;
 use App\Http\Controllers\admin\adminPegawaiController;
 use App\Http\Controllers\admin\adminProdukController;
 use App\Http\Controllers\admin\adminSettingsController;
@@ -45,6 +46,14 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/admin/produk/{item}', [adminProdukController::class, 'update']);
     Route::delete('/admin/produk/{item}', [adminProdukController::class, 'destroy']);
     Route::delete('/admin/produk/{item}/forceDestroy', [adminProdukController::class, 'forceDestroy']);
+
+
+    Route::get('/admin/label', [adminLabelController::class, 'index']);
+    Route::post('/admin/label', [adminLabelController::class, 'store']);
+    Route::get('/admin/label/{item}', [adminLabelController::class, 'edit']);
+    Route::put('/admin/label/{item}', [adminLabelController::class, 'update']);
+    Route::delete('/admin/label/{item}', [adminLabelController::class, 'destroy']);
+    Route::delete('/admin/label/{item}/forceDestroy', [adminLabelController::class, 'forceDestroy']);
 });
 
 // AUTH DICONTROLLER
