@@ -14,12 +14,12 @@ class adminSettingsController extends Controller
         $items = [
             'app_nama' =>  Fungsi::app_nama(),
             'app_namapendek' =>  Fungsi::app_namapendek(),
-            'app_tapel_aktif' => Fungsi::app_tapel_aktif(),
-            'app_tapel_aktif_nama' => Fungsi::app_tapel_aktif_nama(),
-            'pendaftaranpkl' => Fungsi::pendaftaranpkl(),
-            'login_siswa' => Fungsi::login_siswa(),
-            'login_pembimbingsekolah' => Fungsi::login_pembimbingsekolah(),
-            'login_pembimbinglapangan' => Fungsi::login_pembimbinglapangan(),
+            // 'app_tapel_aktif' => Fungsi::app_tapel_aktif(),
+            // 'app_tapel_aktif_nama' => Fungsi::app_tapel_aktif_nama(),
+            // 'pendaftaranpkl' => Fungsi::pendaftaranpkl(),
+            // 'login_siswa' => Fungsi::login_siswa(),
+            // 'login_pembimbingsekolah' => Fungsi::login_pembimbingsekolah(),
+            // 'login_pembimbinglapangan' => Fungsi::login_pembimbinglapangan(),
         ];
         return response()->json([
             'success'    => true,

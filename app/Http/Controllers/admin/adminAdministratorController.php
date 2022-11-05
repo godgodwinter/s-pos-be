@@ -87,4 +87,14 @@ class adminAdministratorController extends Controller
             'message'    => 'Data berhasil di hapus!',
         ], 200);
     }
+    public function forceDestroy($item)
+    {
+
+        // User::destroy($item->id);
+        User::where('id', $item)->forceDelete();
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Data berhasil di hapus!',
+        ], 200);
+    }
 }
