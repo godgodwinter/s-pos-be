@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('owner', function (Blueprint $table) {
+        Schema::create('pegawai', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama');
             $table->string('email')->nullable();
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('owner');
+        Schema::dropIfExists('pegawai');
     }
 };

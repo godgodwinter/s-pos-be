@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama');
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->string('photo')->nullable();
             $table->string('files')->nullable();
             $table->string('prefix')->nullable();

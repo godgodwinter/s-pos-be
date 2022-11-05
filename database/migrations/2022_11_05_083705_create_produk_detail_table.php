@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('produk_detail', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
-            $table->text('desc')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('prefix')->nullable();
-            $table->string('parrent_id')->nullable();
+            $table->string('produk_id')->nullable();
+            $table->string('harga_beli')->nullable();
+            $table->string('harga_jual')->nullable();
+            $table->string('jml')->nullable();
+            $table->string('restok_id')->nullable();
+            $table->string('status')->nullable()->default('Aktif'); //Aktif/Nonaktif login
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('produk_detail');
     }
 };

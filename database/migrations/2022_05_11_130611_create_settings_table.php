@@ -16,14 +16,10 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('app_nama')->default('SI App Nama')->nullable();
-            $table->string('app_namapendek')->default('SIM')->nullable();
+            $table->string('app_namapendek')->default('POST')->nullable();
             $table->string('paginationjml')->default('10')->nullable();
-            $table->string('pendaftaranpkl')->default('Aktif')->nullable();
-            $table->string('login_siswa')->default('Aktif')->nullable();
-            $table->string('login_ortu')->default('Aktif')->nullable();
-            $table->string('login_bk')->default('Aktif')->nullable();
-            $table->string('login_yayasan')->default('Aktif')->nullable();
-            $table->string('login_owner')->default('Aktif')->nullable();
+            $table->string('login_pegawai')->default('Aktif')->nullable();
+            $table->string('login_member')->default('Aktif')->nullable();
             $table->timestamps();
         });
     }
