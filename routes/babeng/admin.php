@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\adminAdministratorController;
+use App\Http\Controllers\admin\adminPegawaiController;
 use App\Http\Controllers\admin\adminSettingsController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,14 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/admin/administrator/{item}', [adminAdministratorController::class, 'update']);
     Route::delete('/admin/administrator/{item}', [adminAdministratorController::class, 'destroy']);
     Route::delete('/admin/administrator/{item}/forceDestroy', [adminAdministratorController::class, 'forceDestroy']);
+
+
+    Route::get('/admin/pegawai', [adminPegawaiController::class, 'index']);
+    Route::post('/admin/pegawai', [adminPegawaiController::class, 'store']);
+    Route::get('/admin/pegawai/{item}', [adminPegawaiController::class, 'edit']);
+    Route::put('/admin/pegawai/{item}', [adminPegawaiController::class, 'update']);
+    Route::delete('/admin/pegawai/{item}', [adminPegawaiController::class, 'destroy']);
+    Route::delete('/admin/pegawai/{item}/forceDestroy', [adminPegawaiController::class, 'forceDestroy']);
 });
 
 // AUTH DICONTROLLER
