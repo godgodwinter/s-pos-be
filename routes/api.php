@@ -16,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 require __DIR__ . '/babeng/admin.php';
-require __DIR__ . '/babeng/owner.php';
+require __DIR__ . '/babeng/pegawai.php';
 require __DIR__ . '/babeng/tanpalogin.php';
