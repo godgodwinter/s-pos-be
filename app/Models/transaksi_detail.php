@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class master_minatbakat extends Model
+class transaksi_detail extends Model
 {
-    public $table = "master_minatbakat";
+    public $table = "transaksi_detail";
 
     use SoftDeletes;
     use HasFactory;
@@ -19,10 +19,15 @@ class master_minatbakat extends Model
     //     'walikelas_id',
     // ];
 
+
     protected $guarded = [];
 
-    public function siswa()
+    public function transaksi()
     {
-        return $this->belongsTo('App\Models\siswa');
+        return $this->belongsTo('App\Models\transaksi');
+    }
+    public function produk()
+    {
+        return $this->belongsTo('App\Models\produk');
     }
 }

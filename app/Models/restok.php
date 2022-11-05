@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class referensi extends Model
+class restok extends Model
 {
-    public $table = "referensi";
+    public $table = "restok";
 
     use SoftDeletes;
     use HasFactory;
@@ -21,4 +21,13 @@ class referensi extends Model
 
 
     protected $guarded = [];
+
+    public function produk_detail()
+    {
+        return $this->hasMany('App\Models\produk_detail');
+    }
+    public function Pegawai()
+    {
+        return $this->hasMany('App\Models\Pegawai', 'penanggungjawab', 'id');
+    }
 }

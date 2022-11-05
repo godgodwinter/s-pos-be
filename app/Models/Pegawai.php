@@ -11,10 +11,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class Gurubk extends Authenticatable implements JWTSubject
+class Pegawai extends Authenticatable implements JWTSubject
 {
     // use HasApiTokens, HasFactory, Notifiable;
-    public $table = "gurubk";
+    public $table = "pegawai";
 
     use SoftDeletes;
     use HasFactory;
@@ -53,15 +53,6 @@ class Gurubk extends Authenticatable implements JWTSubject
     // public function kelas()
     // {
     //     return $this->belongsTo('App\Models\kelas');
-    // }
-
-    public function sekolah()
-    {
-        return $this->belongsTo('App\Models\sekolah')->with('paket');
-    }
-    // public function paket()
-    // {
-    //     return $this->belongsTo('App\Models\paket');
     // }
 
     /**

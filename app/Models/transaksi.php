@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class walikelas extends Model
+class transaksi extends Model
 {
-    public $table = "walikelas";
+    public $table = "transaksi";
 
     use SoftDeletes;
     use HasFactory;
@@ -22,12 +22,12 @@ class walikelas extends Model
 
     protected $guarded = [];
 
-    public function sekolah()
+    public function transaksi_detail()
     {
-        return $this->belongsTo('App\Models\sekolah');
+        return $this->hasMany('App\Models\transaksi_detail');
     }
-    public function kelas()
+    public function Pegawai()
     {
-        return $this->hasMany('App\Models\kelas');
+        return $this->hasMany('App\Models\Pegawai', 'penanggungjawab', 'id');
     }
 }

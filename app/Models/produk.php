@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class kecerdasanmajemuk extends Model
+class produk extends Model
 {
-    public $table = "kecerdasanmajemuk";
+    public $table = "produk";
 
     use SoftDeletes;
     use HasFactory;
@@ -19,10 +19,11 @@ class kecerdasanmajemuk extends Model
     //     'walikelas_id',
     // ];
 
+
     protected $guarded = [];
 
-    // public function siswa()
-    // {
-    //     return $this->belongsTo('App\Models\siswa');
-    // }
+    public function produk_detail()
+    {
+        return $this->hasMany('App\Models\produk_detail');
+    }
 }
