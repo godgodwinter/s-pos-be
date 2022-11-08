@@ -49,13 +49,13 @@ class adminRestokController extends Controller
                 foreach ($dataKeranjang as $dk) {
                     // dd($dk['produk_id']);
                     $dataProduk = produk_detail::create([
-                        'produk_id' => $dk['produk_id'],
-                        'harga_beli' => $dk['harga_beli'],
+                        'produk_id' => $dk['id'],
+                        'harga_beli' => $dk['harga_beli_number'],
                         'jml' => $dk['jml'],
                         'restok_id' => $data->id,
                         // 'harga_' => $dk->harga_beli,
                     ]);
-                    $total = $dk['jml'] * $dk['harga_beli'];
+                    $total = $dk['jml'] * $dk['harga_beli_number'];
                     $totalbayar += $total;
                     // $data = produk_detail::create([
                     //     'produk_id' => $dk->produk_id,
