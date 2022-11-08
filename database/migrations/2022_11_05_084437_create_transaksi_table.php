@@ -17,7 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('kodetrans')->nullable();
             $table->string('pelanggan_tipe')->nullable()->default('Nonmember');
-            $table->string('transaksi_tipe')->nullable()->default('Offline');
+            $table->string('transaksi_tipe')->nullable()->default('Offline');;
+            $table->string('nama')->nullable()->default('');
             $table->string('alamat')->nullable()->default('');
             $table->string('telp')->nullable();
             $table->string('status')->nullable()->default('Aktif');

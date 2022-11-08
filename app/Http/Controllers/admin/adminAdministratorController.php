@@ -69,10 +69,16 @@ class adminAdministratorController extends Controller
                 'email' => $request->email,
                 'username' => $request->username,
                 'nomeridentitas' => $request->nomeridentitas,
-                'password' => Hash::make($request->password),
                 'updated_at' => date("Y-m-d H:i:s")
             ]);
 
+        if ($request->password) {
+            User::where('id', $item->id)
+                ->update([
+                    'password' => Hash::make($request->password),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ]);
+        }
         return response()->json([
             'success'    => true,
             'message'    => 'Data berhasil di update!',

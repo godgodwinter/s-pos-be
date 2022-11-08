@@ -24,7 +24,7 @@ class restok extends Model
 
     public function produk_detail()
     {
-        return $this->hasMany('App\Models\produk_detail');
+        return $this->hasMany('App\Models\produk_detail')->with('produk');
     }
     public function Pegawai()
     {

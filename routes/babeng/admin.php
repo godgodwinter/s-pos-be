@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\adminAdministratorController;
 use App\Http\Controllers\admin\adminLabelController;
 use App\Http\Controllers\admin\adminPegawaiController;
 use App\Http\Controllers\admin\adminProdukController;
+use App\Http\Controllers\admin\adminRestokController;
 use App\Http\Controllers\admin\adminSettingsController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/admin/auth/logout', [AuthController::class, 'logout'])->name('admin.auth.logout');
     Route::post('/admin/auth/refresh', [AuthController::class, 'refresh'])->name('admin.auth.refresh');
     Route::post('/admin/auth/me', [AuthController::class, 'me'])->name('admin.auth.me');
+
+    Route::post("admin/auth/profile", [AuthController::class, 'refresh']);
+    // update
+    Route::post("admin/auth/profile/update", [AuthController::class, 'update']);
 
     Route::get('/admin/settings/get', [adminSettingsController::class, 'index'])->name('admin.settings.get');
 
@@ -47,6 +52,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/admin/produk/{item}', [adminProdukController::class, 'destroy']);
     Route::delete('/admin/produk/{item}/forceDestroy', [adminProdukController::class, 'forceDestroy']);
 
+    // Route::get('/admin/produk/cari', [adminProdukController::class, 'cari']);
+
 
     Route::get('/admin/label', [adminLabelController::class, 'index']);
     Route::post('/admin/label', [adminLabelController::class, 'store']);
@@ -54,6 +61,11 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/admin/label/{item}', [adminLabelController::class, 'update']);
     Route::delete('/admin/label/{item}', [adminLabelController::class, 'destroy']);
     Route::delete('/admin/label/{item}/forceDestroy', [adminLabelController::class, 'forceDestroy']);
+
+
+
+    Route::get('/admin/restok', [adminRestokController::class, 'index']);
+    Route::post('/admin/restok', [adminRestokController::class, 'store']);
 });
 
 // AUTH DICONTROLLER

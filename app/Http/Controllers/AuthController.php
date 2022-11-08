@@ -117,13 +117,26 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+
         return response()->json([
-            'token' => $token,
+            'data' => (object)[
+                'token' => $token,
+                'me' => $this->guard()->user(),
+                'newToken' => $token,
+                'status' => true,
+            ],
+            'message' => "Success",
             'code' => 200,
             'token_type' => 'bearer',
             'expires_in' => $this->guard()->factory()->getTTL() * 1,  //auto logout after 1 hour (default)
-            // 'tapel_aktif' => Fungsi::app_tapel_aktif(),
         ]);
+        // return response()->json([
+        //     'token' => $token,
+        //     'code' => 200,
+        //     'token_type' => 'bearer',
+        //     'expires_in' => $this->guard()->factory()->getTTL() * 1,  //auto logout after 1 hour (default)
+        //     // 'tapel_aktif' => Fungsi::app_tapel_aktif(),
+        // ]);
     }
     /**
      * Get the guard to be used during authentication.
@@ -133,5 +146,38 @@ class AuthController extends Controller
     public function guard()
     {
         return Auth::guard();
+    }
+
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            // 'email' => 'required|string|email|max:255|unique:users',
+            // 'password' => 'required|string',
+        ]);
+
+        // $user = $this->guard()->user();
+        $user = User::find(Auth::user()->id);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'Data berhasil di update',
+        //     'data' => $user
+        // ]);
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->save();
+
+        if ($request->password) {
+            //update password
+            $user = User::find(Auth::user()->id);
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil di update',
+        ]);
     }
 }
