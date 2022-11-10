@@ -30,4 +30,12 @@ class transaksi extends Model
     {
         return $this->hasMany('App\Models\Pegawai', 'penanggungjawab', 'id');
     }
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($data) {
+            $getTransaksiDetail = transaksi_detail::where('transaksi_id', $data->id)->delete();
+        });
+    }
 }

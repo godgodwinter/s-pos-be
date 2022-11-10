@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\adminPegawaiController;
 use App\Http\Controllers\admin\adminProdukController;
 use App\Http\Controllers\admin\adminRestokController;
 use App\Http\Controllers\admin\adminSettingsController;
+use App\Http\Controllers\admin\adminTransaksiController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/restok/{item}', [adminRestokController::class, 'detail']);
     Route::post('/admin/restok', [adminRestokController::class, 'store']);
     Route::delete('/admin/restok/{item}', [adminRestokController::class, 'destroy']);
+
+
+
+    Route::get('/admin/transaksi', [adminTransaksiController::class, 'index']);
+    Route::get('/admin/transaksi/{item}', [adminTransaksiController::class, 'detail']);
+    Route::post('/admin/transaksi', [adminTransaksiController::class, 'store']);
+    Route::delete('/admin/transaksi/{item}', [adminTransaksiController::class, 'destroy']);
 });
 
 // AUTH DICONTROLLER
