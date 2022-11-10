@@ -15,6 +15,13 @@ class adminRestokController extends Controller
     public function index(Request $request)
     {
         $items = restok::with('produk_detail')->orderBy('tglbeli')->get();
+        // $datas = [];
+        foreach ($items as $item) {
+            // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
+            $item->jml_jenis_barang = count($item->produk_detail);
+            $sumJml = produk_detail::where('restok_id', $item->id)->sum('jml');
+            $item->jml_barang = $sumJml;
+        }
         return response()->json([
             'success'    => true,
             'data'    => $items,
@@ -81,6 +88,23 @@ class adminRestokController extends Controller
             // 'jml' => count($request->dataKeranjang),
             // 'dataDetail' => count($request->dataKeranjang),
             'data'    => $items,
+        ], 200);
+    }
+    public function detail(restok $item) //like edit
+    {
+        $data = restok::with('produk_detail')->where('id', $item->id)->get();
+        return response()->json([
+            'success'    => true,
+            'data'    => $data,
+        ], 200);
+    }
+    public function destroy(restok $item)
+    {
+
+        restok::destroy($item->id);
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Data berhasil di hapus!',
         ], 200);
     }
 }

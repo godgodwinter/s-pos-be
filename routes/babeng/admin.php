@@ -65,7 +65,9 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('/admin/restok', [adminRestokController::class, 'index']);
+    Route::get('/admin/restok/{item}', [adminRestokController::class, 'detail']);
     Route::post('/admin/restok', [adminRestokController::class, 'store']);
+    Route::delete('/admin/restok/{item}', [adminRestokController::class, 'destroy']);
 });
 
 // AUTH DICONTROLLER

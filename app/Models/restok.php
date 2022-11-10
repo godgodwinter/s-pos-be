@@ -30,4 +30,28 @@ class restok extends Model
     {
         return $this->hasMany('App\Models\Pegawai', 'penanggungjawab', 'id');
     }
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($data) {
+            // siswadetail::where('siswa_id', $siswa->id)->delete();
+
+            // //update
+            $getProdukDetail = produk_detail::where('restok_id', $data->id)->delete();
+
+            // foreach ($getApiProBKId as $data) {
+            //     apiprobk::where('id', $data->apiprobk_id)->update([
+            //         'sinkron' => 'belum',
+            //         'sinkron_tgl' => date("Y-m-d H:i:s"),
+            //         'updated_at' => date("Y-m-d H:i:s")
+            //     ]);
+            //     // apiprobk::where('id', $data->apiprobk_id)->forceDelete();
+            //     // apiprobk_deteksi::where('apiprobk_id', $data->apiprobk_id)->forceDelete();
+            //     // apiprobk_sertifikat::where('apiprobk_id', $data->apiprobk_id)->forceDelete();
+            // }
+
+            // $siswa->siswadetail()->delete();
+        });
+    }
 }
