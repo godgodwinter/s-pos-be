@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\produk;
 use App\Models\produk_detail;
+use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -18,6 +19,8 @@ class adminProdukController extends Controller
             // $item->stok_tersedia = 0;
             $item->stok_tersedia = $this->fnPeriksaStokTersedia($item->id);
             $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
+            $item->stok_total = produk_detail::where('produk_id', $item->id)->sum('jml');
+            $item->stok_terjual = transaksi_detail::where('produk_id', $item->id)->sum('jml');
         }
         return response()->json([
             'success'    => true,
@@ -112,8 +115,10 @@ class adminProdukController extends Controller
         // 1. ambil data produk_detail where produk_id
         // jumlahkan jml
         $getProdukDetail = produk_detail::where('produk_id', $produk_id)->sum('jml');
-        $result = $getProdukDetail;
+        // $result = $getProdukDetail;
         // 2.ambil transaksi_detail where produk_id
+        $getTerjual = transaksi_detail::where('produk_id', $produk_id)->sum('jml');
+        $result = $getProdukDetail - $getTerjual;
         // jmlahkan jml
         //3. result = jml stok - jml terjual;
         return $result;
