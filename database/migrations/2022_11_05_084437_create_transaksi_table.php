@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('photo_konfirmasi')->nullable()->default('Aktif');
             $table->string('penanggungjawab')->nullable()->default('Aktif'); //kasir
             $table->string('tglbeli')->nullable();
-            $table->string('ppn')->nullable(0);
+            $table->string('ppn')->nullable()->default(0);
             $table->string('total_bayar')->nullable()->default(0);
             $table->string('dibayar')->nullable()->default(0);
             $table->string('kembalian')->nullable()->default(0);

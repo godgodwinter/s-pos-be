@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\produk_detail;
 use App\Models\transaksi;
+use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -43,49 +44,52 @@ class adminTransaksiController extends Controller
         // //     'nama' => $request->nama,
         // //     'prefix' => "produk",
         // // ]);
-        // $this->req = $request;
-        // DB::transaction(function () {
-        //     $dataKeranjang = $this->req->dataKeranjang;
-        //     //1.insert table transaksi and get invalid-feedback
-        //     $data = transaksi::create([
-        //         'namatoko' => $this->req->namatoko,
-        //         'tglbeli' => $this->req->tglbeli,
-        //         'penanggungjawab' => $this->req->penanggungjawab,
-        //     ]);
-        //     if (count($dataKeranjang) > 0) {
-        //         $totalbayar = 0;
-        //         foreach ($dataKeranjang as $dk) {
-        //             // dd($dk['produk_id']);
-        //             $dataProduk = produk_detail::create([
-        //                 'produk_id' => $dk['id'],
-        //                 'harga_beli' => $dk['harga_beli_number'],
-        //                 'jml' => $dk['jml'],
-        //                 'transaksi_id' => $data->id,
-        //                 // 'harga_' => $dk->harga_beli,
-        //             ]);
-        //             $total = $dk['jml'] * $dk['harga_beli_number'];
-        //             $totalbayar += $total;
-        //             // $data = produk_detail::create([
-        //             //     'produk_id' => $dk->produk_id,
-        //             //     'harga_beli' => $dk->harga_beli,
-        //             //     'jml' => $dk->jml,
-        //             //     'transaksi_id' => $data->id,
-        //             //     // 'harga_' => $dk->harga_beli,
-        //             // ]);
-        //         }
-        //     }
+        $this->req = $request;
+        DB::transaction(function () {
+            $dataKeranjang = $this->req->dataKeranjang;
+            //     //1.insert table transaksi and get invalid-feedback
+            $data = transaksi::create([
+                'total_bayar' => $this->req->total_bayar,
+                'dibayar' => $this->req->dibayar,
+                'kembalian' => $this->req->kembalian,
+                'tglbeli' => $this->req->tglbeli,
+                'penanggungjawab' => $this->req->penanggungjawab,
+            ]);
+            if (count($dataKeranjang) > 0) {
+                $totalbayar = 0;
+                foreach ($dataKeranjang as $dk) {
+                    // dd($dk['produk_id']);
+                    $dataProduk = transaksi_detail::create([
+                        'produk_id' => $dk['id'],
+                        'harga_terjual' => $dk['harga_beli_number'],
+                        'harga_akhir' => $dk['harga_beli_number'],
+                        'jml' => $dk['jml'],
+                        'transaksi_id' => $data->id,
+                        // 'harga_' => $dk->harga_beli,
+                    ]);
+                    // $total = $dk['jml'] * $dk['harga_beli_number'];
+                    // $totalbayar += $total;
+                    // $data = produk_detail::create([
+                    //     'produk_id' => $dk->produk_id,
+                    //     'harga_beli' => $dk->harga_beli,
+                    //     'jml' => $dk->jml,
+                    //     'transaksi_id' => $data->id,
+                    //     // 'harga_' => $dk->harga_beli,
+                    // ]);
+                }
+            }
 
-        //     transaksi::where('id', $data->id)
-        //         ->update([
-        //             'totalbayar' => $totalbayar,
-        //             'updated_at' => date("Y-m-d H:i:s")
-        //         ]);
-        // });
+            // transaksi::where('id', $data->id)
+            //     ->update([
+            //         'total_bayar' => $totalbayar,
+            //         'updated_at' => date("Y-m-d H:i:s")
+            //     ]);
+        });
 
         return response()->json([
             'success'    => true,
             'kodetrans' => Uuid::uuid4()->toString(),
-            // 'thisReq' => $this->req->namatoko,
+            'total_bayar' => $this->req->total_bayar,
             // 'Request' => $request->namatoko,
             // 'jml' => count($request->dataKeranjang),
             // 'dataDetail' => count($request->dataKeranjang),
