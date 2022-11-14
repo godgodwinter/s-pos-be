@@ -8,6 +8,7 @@ use App\Models\transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 
 class adminTransaksiController extends Controller
 {
@@ -83,6 +84,7 @@ class adminTransaksiController extends Controller
 
         return response()->json([
             'success'    => true,
+            'kodetrans' => Uuid::uuid4()->toString(),
             // 'thisReq' => $this->req->namatoko,
             // 'Request' => $request->namatoko,
             // 'jml' => count($request->dataKeranjang),

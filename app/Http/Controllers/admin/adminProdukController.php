@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\produk;
+use App\Models\produk_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -13,6 +14,11 @@ class adminProdukController extends Controller
     public function index(Request $request)
     {
         $items = produk::get();
+        foreach ($items as $key => $item) {
+            // $item->stok_tersedia = 0;
+            $item->stok_tersedia = $this->fnPeriksaStokTersedia($item->id);
+            $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
+        }
         return response()->json([
             'success'    => true,
             'data'    => $items,
@@ -98,5 +104,36 @@ class adminProdukController extends Controller
             'success'    => true,
             'message'    => 'Data berhasil di hapus!',
         ], 200);
+    }
+
+    public function fnPeriksaStokTersedia($produk_id)
+    {
+        $result = 0;
+        // 1. ambil data produk_detail where produk_id
+        // jumlahkan jml
+        $getProdukDetail = produk_detail::where('produk_id', $produk_id)->sum('jml');
+        $result = $getProdukDetail;
+        // 2.ambil transaksi_detail where produk_id
+        // jmlahkan jml
+        //3. result = jml stok - jml terjual;
+        return $result;
+    }
+
+    public function fnGetAvgHargaBeli($produk_id)
+    {
+        $result = 0;
+        $totalHargaBeli = 0;
+        $jmlProduk = 0;
+
+        $getProdukDetail = produk_detail::where('produk_id', $produk_id)->get();
+        foreach ($getProdukDetail as $produk) {
+            // jml * harga_beli
+            $totalHargaBeli += $produk->jml * $produk->harga_beli;
+            $jmlProduk += $produk->jml;
+        }
+        if ($jmlProduk) {
+            $result = $totalHargaBeli / $jmlProduk;
+        }
+        return $result;
     }
 }
