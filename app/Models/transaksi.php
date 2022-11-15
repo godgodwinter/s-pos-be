@@ -24,7 +24,7 @@ class transaksi extends Model
 
     public function transaksi_detail()
     {
-        return $this->hasMany('App\Models\transaksi_detail');
+        return $this->hasMany('App\Models\transaksi_detail')->with('produk');
     }
     public function Pegawai()
     {
