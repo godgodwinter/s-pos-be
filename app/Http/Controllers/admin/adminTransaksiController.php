@@ -17,13 +17,12 @@ class adminTransaksiController extends Controller
     public function index(Request $request)
     {
         $items = transaksi::with('transaksi_detail')->orderBy('tglbeli')->get();
-        // $datas = [];
-        // foreach ($items as $item) {
-        //     // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
-        //     $item->jml_jenis_barang = count($item->produk_detail);
-        //     $sumJml = produk_detail::where('transaksi_id', $item->id)->sum('jml');
-        //     $item->jml_barang = $sumJml;
-        // }
+        foreach ($items as $item) {
+            // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
+            $item->jml_jenis_barang = count($item->transaksi_detail);
+            $sumJml = transaksi_detail::where('transaksi_id', $item->id)->sum('jml');
+            $item->jml_barang = $sumJml;
+        }
         return response()->json([
             'success'    => true,
             'data'    => $items,
