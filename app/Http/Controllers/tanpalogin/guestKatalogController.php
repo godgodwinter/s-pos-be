@@ -12,7 +12,26 @@ class guestKatalogController extends Controller
 {
     public function index()
     {
-        $items = produk::get();
+        $items = produk::orderBy('nama', 'asc')
+            ->get();
+        foreach ($items as $key => $item) {
+            // $item->stok_tersedia = 0;
+            $item->stok_tersedia = $this->fnPeriksaStokTersedia($item->id);
+            $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
+            $item->stok_total = produk_detail::where('produk_id', $item->id)->sum('jml');
+            $item->stok_terjual = transaksi_detail::where('produk_id', $item->id)->sum('jml');
+        }
+        return response()->json([
+            'success'    => true,
+            'data'    => $items,
+        ], 200);
+    }
+
+    public function cari(Request $request)
+    {
+        $items = produk::where('nama', 'like', '%' . $request->cari . '%')
+            ->orderBy('nama', 'asc')
+            ->get();
         foreach ($items as $key => $item) {
             // $item->stok_tersedia = 0;
             $item->stok_tersedia = $this->fnPeriksaStokTersedia($item->id);

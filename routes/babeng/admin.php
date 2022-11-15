@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\adminAdministratorController;
 use App\Http\Controllers\admin\adminLabelController;
+use App\Http\Controllers\admin\adminLaporanController;
 use App\Http\Controllers\admin\adminPegawaiController;
 use App\Http\Controllers\admin\adminProdukController;
 use App\Http\Controllers\admin\adminRestokController;
@@ -76,6 +77,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/transaksi/{item}', [adminTransaksiController::class, 'detail']);
     Route::post('/admin/transaksi', [adminTransaksiController::class, 'store']);
     Route::delete('/admin/transaksi/{item}', [adminTransaksiController::class, 'destroy']);
+
+
+    Route::get('/admin/laporan', [adminLaporanController::class, 'index']); //req=blnthn -- PENJUALAN /transaksi
+    Route::get('/admin/laporan/penjualan', [adminLaporanController::class, 'index']); //req=blnthn  -- PENJUALAN
+    Route::get('/admin/laporan/restok', [adminLaporanController::class, 'restok']); //req=blnthn -- RESTOK
+    Route::get('/admin/laporan/laba', [adminLaporanController::class, 'laba']); //req=blnthn -- TOTAL PENJUALAN - TOTAL RESTOK
 });
 
 // AUTH DICONTROLLER
