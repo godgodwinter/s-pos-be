@@ -57,13 +57,13 @@ class adminTransaksiController extends Controller
                 'kembalian' => $this->req->kembalian,
                 'tglbeli' => $this->req->tglbeli,
                 'penanggungjawab' => $this->req->penanggungjawab,
+                'kodetrans' => $this->kodetrans,
             ]);
             if (count($dataKeranjang) > 0) {
                 $totalbayar = 0;
                 foreach ($dataKeranjang as $dk) {
                     // dd($dk['produk_id']);
                     $dataProduk = transaksi_detail::create([
-                        'kodetrans' => $this->kodetrans,
                         'produk_id' => $dk['id'],
                         'harga_terjual' => $dk['harga_beli_number'],
                         'harga_akhir' => $dk['harga_beli_number'],
