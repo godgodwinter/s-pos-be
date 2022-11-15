@@ -8,13 +8,17 @@ use App\Models\restok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 
 class adminRestokController extends Controller
 {
     protected $req;
+    protected $kodetrans;
     public function index(Request $request)
     {
-        $items = restok::with('produk_detail')->orderBy('tglbeli')->get();
+        $items = restok::with('produk_detail')
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->get();
         // $datas = [];
         foreach ($items as $item) {
             // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
@@ -43,6 +47,7 @@ class adminRestokController extends Controller
         //     'prefix' => "produk",
         // ]);
         $this->req = $request;
+        $this->kodetrans = Uuid::uuid4()->toString();
         DB::transaction(function () {
             $dataKeranjang = $this->req->dataKeranjang;
             //1.insert table restok and get invalid-feedback
@@ -50,6 +55,7 @@ class adminRestokController extends Controller
                 'namatoko' => $this->req->namatoko,
                 'tglbeli' => $this->req->tglbeli,
                 'penanggungjawab' => $this->req->penanggungjawab,
+                'kodetrans' => $this->kodetrans,
             ]);
             if (count($dataKeranjang) > 0) {
                 $totalbayar = 0;
@@ -83,6 +89,7 @@ class adminRestokController extends Controller
 
         return response()->json([
             'success'    => true,
+            'kodetrans' => $this->kodetrans,
             // 'thisReq' => $this->req->namatoko,
             // 'Request' => $request->namatoko,
             // 'jml' => count($request->dataKeranjang),
@@ -92,7 +99,10 @@ class adminRestokController extends Controller
     }
     public function detail(restok $item) //like edit
     {
-        $data = restok::with('produk_detail')->where('id', $item->id)->get();
+        $data = restok::with('produk_detail')->where('id', $item->id)->first();
+        $data->jml_jenis_barang = count($data->produk_detail);
+        $sumJml = produk_detail::where('restok_id', $data->id)->sum('jml');
+        $data->jml_barang = $sumJml;
         return response()->json([
             'success'    => true,
             'data'    => $data,

@@ -14,9 +14,12 @@ use Ramsey\Uuid\Uuid;
 class adminTransaksiController extends Controller
 {
     protected $req;
+    protected $kodetrans;
     public function index(Request $request)
     {
-        $items = transaksi::with('transaksi_detail')->orderBy('tglbeli')->get();
+        $items = transaksi::with('transaksi_detail')
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->get();
         foreach ($items as $item) {
             // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
             $item->jml_jenis_barang = count($item->transaksi_detail);
@@ -44,6 +47,7 @@ class adminTransaksiController extends Controller
         // //     'prefix' => "produk",
         // // ]);
         $this->req = $request;
+        $this->kodetrans = Uuid::uuid4()->toString();
         DB::transaction(function () {
             $dataKeranjang = $this->req->dataKeranjang;
             //     //1.insert table transaksi and get invalid-feedback
@@ -59,6 +63,7 @@ class adminTransaksiController extends Controller
                 foreach ($dataKeranjang as $dk) {
                     // dd($dk['produk_id']);
                     $dataProduk = transaksi_detail::create([
+                        'kodetrans' => $this->kodetrans,
                         'produk_id' => $dk['id'],
                         'harga_terjual' => $dk['harga_beli_number'],
                         'harga_akhir' => $dk['harga_beli_number'],
@@ -87,7 +92,7 @@ class adminTransaksiController extends Controller
 
         return response()->json([
             'success'    => true,
-            'kodetrans' => Uuid::uuid4()->toString(),
+            'kodetrans' => $this->kodetrans,
             'total_bayar' => $this->req->total_bayar,
             // 'Request' => $request->namatoko,
             // 'jml' => count($request->dataKeranjang),
@@ -97,7 +102,10 @@ class adminTransaksiController extends Controller
     }
     public function detail(transaksi $item) //like edit
     {
-        $data = transaksi::with('transaksi_detail')->where('id', $item->id)->get();
+        $data = transaksi::with('transaksi_detail')->where('id', $item->id)->first();
+        $data->jml_jenis_barang = count($data->transaksi_detail);
+        $sumJml = transaksi_detail::where('transaksi_id', $data->id)->sum('jml');
+        $data->jml_barang = $sumJml;
         return response()->json([
             'success'    => true,
             'data'    => $data,
