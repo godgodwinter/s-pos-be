@@ -70,32 +70,8 @@ class adminLaporanController extends Controller
             'data'    => $items,
         ], 200);
     }
-    public function laba(Request $request)
-    {
-        $items = [];
-        $blnthn = date('Y-m');
-
-        //     $items = transaksi::with('transaksi_detail')
-        //         ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
-        //         ->get();
-        //     foreach ($items as $item) {
-        //         // $getBerapaProduk = produk_detail::select('produk_id')->distinct()->get();
-        //         $item->jml_jenis_barang = count($item->transaksi_detail);
-        //         $sumJml = transaksi_detail::where('transaksi_id', $item->id)->sum('jml');
-        //         $item->jml_barang = $sumJml;
-        //     }
-        return response()->json([
-            'success'    => true,
-            'data'    => $items,
-        ], 200);
-    }
     public function restok(Request $request) // PENJUALAN
     {
-        // $date1 = '2020-03-05';
-
-        // $date2 = Carbon::parse($date1)->format('d F y');
-
-        // dd($date2);
         $blnthn = $request->blnthn ? $request->blnthn : date('Y-m');
         $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
         $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
@@ -123,6 +99,9 @@ class adminLaporanController extends Controller
         foreach ($getRestok as $restok) {
             $jml_barang += produk_detail::where('restok_id', $restok->id)->sum('jml');
             $jml_jenis_barang = count($restok->produk_detail);
+            $restok->jml_jenis_barang = count($restok->produk_detail);
+            $sumJml = produk_detail::where('restok_id', $restok->id)->sum('jml');
+            $restok->jml_barang = $sumJml;
         }
 
         $items->jml_barang = $jml_barang;
@@ -142,13 +121,93 @@ class adminLaporanController extends Controller
             'data'    => $items,
         ], 200);
     }
-    public function fnGetPemasukan($blnthn)
+    public function laba(Request $request)
     {
-        // 1.get data table transaksi,, total pada bulan blnthn
+        $blnthn = $request->blnthn ? $request->blnthn : date('Y-m');
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
+        $items = (object)[];
+        $items->blnthn = $request->blnthn;
+        $items->blnthn_view = $blnthn ? Fungsi::tanggalindobln($blnthn) : Fungsi::tanggalindobln(date('Y-m'));
+        $items->jml_transaksi = $this->fnGetTransaksiJml($blnthn);
+        $items->total_transaksi = $this->fnGetTransaksi($blnthn);
+        $items->jml_restok =  $this->fnGetRestokJml($blnthn);
+        $items->total_restok = $this->fnGetRestok($blnthn);
+        $items->total_laba = $items->total_transaksi - $items->total_restok;
+        $status = "";
+        if ($items->total_laba > 0) {
+            $status = "Untung";
+        } elseif ($items->total_laba < 0) {
+            $status = "Rugi";
+        }
+        $items->status = $status;
+        $items->detail = [];
+
+        return response()->json([
+            'success'    => true,
+            'data'    => $items,
+        ], 200);
     }
-    public function fnGetPengeluaran($blnthn)
+    public function fnGetTransaksi($blnthn)
     {
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
+        // 1.get data table transaksi,, total pada bulan blnthn
+        $result = 0;
+
+        $result = transaksi::with('transaksi_detail')
+            ->whereMonth('tglbeli', $bln)
+            ->whereYear('tglbeli', $thn)
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->sum('total_bayar');
+
+        return $result;
+    }
+    public function fnGetRestok($blnthn)
+    {
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
         // 1.get Data table restok  ,, total pada bulan blnthn
+        $result = 0;
+
+        $result = restok::with('produk_detail')
+            ->whereMonth('tglbeli', $bln)
+            ->whereYear('tglbeli', $thn)
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->sum('totalbayar');
+
+        return $result;
+    }
+
+    public function fnGetTransaksiJml($blnthn)
+    {
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
+        // 1.get data table transaksi,, total pada bulan blnthn
+        $result = 0;
+
+        $result = transaksi::with('transaksi_detail')
+            ->whereMonth('tglbeli', $bln)
+            ->whereYear('tglbeli', $thn)
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->get();
+
+        return count($result);
+    }
+    public function fnGetRestokJml($blnthn)
+    {
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
+        // 1.get Data table restok  ,, total pada bulan blnthn
+        $result = 0;
+
+        $result = restok::with('produk_detail')
+            ->whereMonth('tglbeli', $bln)
+            ->whereYear('tglbeli', $thn)
+            ->orderBy('tglbeli', 'desc')->orderBy('id', 'desc')
+            ->get();
+
+        return count($result);
     }
     public function fnGetSemuaTransaksi($blnthn) // cari total transaksi minus apa plus
     {
