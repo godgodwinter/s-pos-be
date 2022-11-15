@@ -9,6 +9,7 @@ use App\Models\restok;
 use App\Models\transaksi;
 use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
@@ -21,8 +22,8 @@ class adminLaporanController extends Controller
     public function index(Request $request)
     {
         $blnthn = $request->blnthn ? $request->blnthn : date('Y-m');
-        $bln = date('m');
-        $thn = date('Y');
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
         $items = (object)[];
         $items->blnthn = $request->blnthn;
         $items->blnthn_view = $blnthn ? Fungsi::tanggalindobln($blnthn) : Fungsi::tanggalindobln(date('Y-m'));
@@ -47,6 +48,9 @@ class adminLaporanController extends Controller
         foreach ($getTransaksi as $transaksi) {
             $jml_barang_terjual += transaksi_detail::where('transaksi_id', $transaksi->id)->sum('jml');
             $jml_jenis_barang_terjual = count($transaksi->transaksi_detail);
+            $transaksi->jml_jenis_barang = count($transaksi->transaksi_detail);
+            $sumJml = transaksi_detail::where('transaksi_id', $transaksi->id)->sum('jml');
+            $transaksi->jml_barang = $sumJml;
         }
 
         $items->jml_barang_terjual = $jml_barang_terjual;
@@ -87,9 +91,14 @@ class adminLaporanController extends Controller
     }
     public function restok(Request $request) // PENJUALAN
     {
+        // $date1 = '2020-03-05';
+
+        // $date2 = Carbon::parse($date1)->format('d F y');
+
+        // dd($date2);
         $blnthn = $request->blnthn ? $request->blnthn : date('Y-m');
-        $bln = date('m');
-        $thn = date('Y');
+        $bln = $blnthn ? Carbon::parse($blnthn)->format('m') : date('m');
+        $thn = $blnthn ? Carbon::parse($blnthn)->format('Y') : date('Y');
         $items = (object)[];
         $items->blnthn = $request->blnthn;
         $items->blnthn_view = $blnthn ? Fungsi::tanggalindobln($blnthn) : Fungsi::tanggalindobln(date('Y-m'));
