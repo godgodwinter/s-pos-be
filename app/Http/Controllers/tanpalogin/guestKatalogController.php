@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\tanpalogin;
 
 use App\Http\Controllers\Controller;
+use App\Models\images;
+use App\Models\label_produk;
 use App\Models\produk;
 use App\Models\produk_detail;
 use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class guestKatalogController extends Controller
 {
@@ -20,6 +23,20 @@ class guestKatalogController extends Controller
             $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
             $item->stok_total = produk_detail::where('produk_id', $item->id)->sum('jml');
             $item->stok_terjual = transaksi_detail::where('produk_id', $item->id)->sum('jml');
+
+
+
+            $item->label = label_produk::with('label')->where('produk_id', $item->id)->get();
+            $labelSelected = [];
+            foreach ($item->label as $label) {
+                array_push($labelSelected, $label->label);
+            }
+            $item->labelSelected = $labelSelected;
+            $item->photo = images::where('prefix', 'produk')->where('parrent_id', $item->id)->get();
+            foreach ($item->photo as $photo) {
+                // $photo->link = URL('/') . "/" . $photo->photo;
+                $photo->link = URL::to($photo->photo);
+            }
         }
         return response()->json([
             'success'    => true,
@@ -38,6 +55,15 @@ class guestKatalogController extends Controller
             $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
             $item->stok_total = produk_detail::where('produk_id', $item->id)->sum('jml');
             $item->stok_terjual = transaksi_detail::where('produk_id', $item->id)->sum('jml');
+
+
+            $item->label = label_produk::with('label')->where('produk_id', $item->id)->get();
+            $labelSelected = [];
+            foreach ($item->label as $label) {
+                array_push($labelSelected, $label->label);
+            }
+            $item->labelSelected = $labelSelected;
+            $item->photo = images::where('prefix', 'produk')->where('parrent_id', $item->id)->get();
         }
         return response()->json([
             'success'    => true,
@@ -53,6 +79,18 @@ class guestKatalogController extends Controller
         $data->harga_beli_avg = $this->fnGetAvgHargaBeli($data->id);
         $data->stok_total = produk_detail::where('produk_id', $data->id)->sum('jml');
         $data->stok_terjual = transaksi_detail::where('produk_id', $data->id)->sum('jml');
+
+
+        $item->label = label_produk::with('label')->where('produk_id', $item->id)->get();
+        $labelSelected = [];
+        foreach ($item->label as $label) {
+            array_push($labelSelected, $label->label);
+        }
+        $item->labelSelected = $labelSelected;
+        $item->photo = images::where('prefix', 'produk')->where('parrent_id', $item->id)->get();
+        foreach ($item->photo as $photo) {
+            $photo->link = URL('/') . "/" . $photo->photo;
+        }
         return response()->json([
             'success'    => true,
             'data'    => $data,

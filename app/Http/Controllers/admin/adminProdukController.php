@@ -10,8 +10,11 @@ use App\Models\produk;
 use App\Models\produk_detail;
 use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class adminProdukController extends Controller
 {
@@ -24,6 +27,18 @@ class adminProdukController extends Controller
             $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
             $item->stok_total = produk_detail::where('produk_id', $item->id)->sum('jml');
             $item->stok_terjual = transaksi_detail::where('produk_id', $item->id)->sum('jml');
+
+
+            $item->label = label_produk::with('label')->where('produk_id', $item->id)->get();
+            $labelSelected = [];
+            foreach ($item->label as $label) {
+                array_push($labelSelected, $label->label);
+            }
+            $item->labelSelected = $labelSelected;
+            $item->photo = images::where('prefix', 'produk')->where('parrent_id', $item->id)->get();
+            foreach ($item->photo as $photo) {
+                $photo->link = URL::to($photo->photo);
+            }
         }
         return response()->json([
             'success'    => true,
@@ -69,6 +84,9 @@ class adminProdukController extends Controller
         }
         $item->labelSelected = $labelSelected;
         $item->photo = images::where('prefix', 'produk')->where('parrent_id', $item->id)->get();
+        foreach ($item->photo as $photo) {
+            $photo->link = URL::to($photo->photo);
+        }
 
         $item->stok_tersedia = $this->fnPeriksaStokTersedia($item->id);
         $item->harga_beli_avg = $this->fnGetAvgHargaBeli($item->id);
@@ -112,6 +130,22 @@ class adminProdukController extends Controller
     {
 
         produk::destroy($item->id);
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Data berhasil di hapus!',
+        ], 200);
+    }
+    public function deletePhoto(produk $item, images $images)
+    {
+
+        // produk::destroy($item->id);
+        images::where('id', $images->id)->forceDelete();
+
+        $path = public_path($images->photo);
+        // dd($path, File::exists($path));
+        if (File::exists($path)) {
+            File::delete($path);
+        }
         return response()->json([
             'success'    => true,
             'message'    => 'Data berhasil di hapus!',
@@ -220,6 +254,47 @@ class adminProdukController extends Controller
         return response()->json([
             'success'    => true,
             'data' => $request->labelSelected,
+            'message'    => 'Data berhasil di update!',
+        ], 200);
+    }
+
+
+    public function uploadPhoto(produk $item, Request $request)
+    {
+
+        //set validation
+        $validator = Validator::make($request->all(), [
+            'file'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
+        ]);
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $file = $request->file('file');
+        // upload photo
+        $path = 'uploads/images/produk';
+        $file = $request->file('file');
+        // $nama_file = rand() . $file->getClientOriginalName();
+        $ext = $file->getClientOriginalExtension();
+        $random = Uuid::uuid4()->toString();
+        $nama_file = $item->id . '-' . $item->slug . $random . $ext;
+        $file->move($path, $nama_file);
+        $data['photo'] = $path . '/' . $nama_file;
+
+        $getData = images::where('prefix', 'produk')->where('parrent_id', $item->id);
+        // if ($getData->count() > 0) {
+        //     $getData->update($data);
+        // } else {
+        $data['prefix'] = 'produk';
+        $data['parrent_id'] = $item->id;
+        $data['nama'] = $nama_file;
+        images::create($data);
+        // }
+
+
+        return response()->json([
+            'success'    => true,
+            'data'    => $nama_file,
             'message'    => 'Data berhasil di update!',
         ], 200);
     }

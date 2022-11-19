@@ -54,6 +54,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/admin/produk/{item}', [adminProdukController::class, 'destroy']);
     Route::delete('/admin/produk/{item}/forceDestroy', [adminProdukController::class, 'forceDestroy']);
     Route::post('/admin/produk/{item}/updateLabel', [adminProdukController::class, 'updateLabel']);
+    Route::post('/admin/produk/{item}/uploadPhoto', [adminProdukController::class, 'uploadPhoto']);
+    Route::delete('/admin/produk/{item}/deletePhoto/{images}', [adminProdukController::class, 'deletePhoto']);
 
     // Route::get('/admin/produk/cari', [adminProdukController::class, 'cari']);
 
