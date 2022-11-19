@@ -97,6 +97,33 @@ class guestKatalogController extends Controller
 
         ], 200);
     }
+    public function slug($slug)
+    {
+        $item = produk::where('slug', $slug)->first();
+        $data = produk::where('slug', $slug)->first();
+
+        $data->stok_tersedia = $this->fnPeriksaStokTersedia($data->id);
+        $data->harga_beli_avg = $this->fnGetAvgHargaBeli($data->id);
+        $data->stok_total = produk_detail::where('produk_id', $data->id)->sum('jml');
+        $data->stok_terjual = transaksi_detail::where('produk_id', $data->id)->sum('jml');
+
+
+        $data->label = label_produk::with('label')->where('produk_id', $data->id)->get();
+        $labelSelected = [];
+        foreach ($data->label as $label) {
+            array_push($labelSelected, $label->label);
+        }
+        $data->labelSelected = $labelSelected;
+        $data->photo = images::where('prefix', 'produk')->where('parrent_id', $data->id)->get();
+        foreach ($data->photo as $photo) {
+            $photo->link = URL('/') . "/" . $photo->photo;
+        }
+        return response()->json([
+            'success'    => true,
+            'data'    => $data,
+
+        ], 200);
+    }
     public function fnPeriksaStokTersedia($produk_id)
     {
         $result = 0;
