@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/admin/produk/{item}', [adminProdukController::class, 'update']);
     Route::delete('/admin/produk/{item}', [adminProdukController::class, 'destroy']);
     Route::delete('/admin/produk/{item}/forceDestroy', [adminProdukController::class, 'forceDestroy']);
+    Route::post('/admin/produk/{item}/updateLabel', [adminProdukController::class, 'updateLabel']);
 
     // Route::get('/admin/produk/cari', [adminProdukController::class, 'cari']);
 

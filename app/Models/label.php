@@ -19,6 +19,7 @@ class label extends Model
         'photo',
         'desc',
         'parrent_id',
+        'status',
     ];
 
     // public function tapel()
