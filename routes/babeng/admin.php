@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/admin/auth/login', [AuthController::class, 'login'])->name('admin.auth.login');
+// Route::post('/admin/auth/login', [AuthController::class, 'login'])->name('login');
 // Route::post('/admin/auth/register', [AuthController::class, 'register'])->name('admin.auth.register');
 // Route::middleware('api')->group(function () {
 Route::middleware('auth:api')->group(function () {
@@ -88,6 +89,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/laporan/laba', [adminLaporanController::class, 'laba']); //req=blnthn -- TOTAL PENJUALAN - TOTAL RESTOK
 });
 
+// Route::get('/admin/produk', [adminProdukController::class, 'index']);
+// Route::get('/admin/produk/{item}', [adminProdukController::class, 'edit']);
 // AUTH DICONTROLLER
 
 // Route::get('/admin/sekolah', [adminSekolahController::class, 'index']);
