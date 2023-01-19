@@ -17,7 +17,7 @@ Route::post('/admin/auth/login', [AuthController::class, 'login'])->name('admin.
 // Route::post('/admin/auth/login', [AuthController::class, 'login'])->name('login');
 // Route::post('/admin/auth/register', [AuthController::class, 'register'])->name('admin.auth.register');
 // Route::middleware('api')->group(function () {
-Route::middleware('auth:api')->group(function () {
+Route::middleware('babeng:adminPegawai')->group(function () {
     //menu-auth
     Route::post('/admin/auth/logout', [AuthController::class, 'logout'])->name('admin.auth.logout');
     Route::post('/admin/auth/refresh', [AuthController::class, 'refresh'])->name('admin.auth.refresh');
