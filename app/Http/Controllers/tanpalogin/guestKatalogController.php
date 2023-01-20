@@ -7,6 +7,7 @@ use App\Models\images;
 use App\Models\label_produk;
 use App\Models\produk;
 use App\Models\produk_detail;
+use App\Models\transaksi;
 use App\Models\transaksi_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -155,5 +156,24 @@ class guestKatalogController extends Controller
             $result = $totalHargaBeli / $jmlProduk;
         }
         return $result;
+    }
+
+
+    public function transaksi($kodetrans)
+    {
+        $items = transaksi::orderBy('tglbeli', 'asc')
+            ->with('transaksi_detail')
+            ->where('kodetrans', $kodetrans)
+            ->first();
+        foreach ($items->transaksi_detail as $item) {
+            $item->produk_nama = $item->produk ? $item->produk->nama : null;
+            // $item->produk_jml = $item->produk ? $item->produk->count() : null;
+            // $item->produk_jml_total = $item->produk ? $item->produk->sum('jml') : null;
+        }
+        $items->produk_jml = $items->transaksi_detail ? $items->transaksi_detail->count() : 0;
+        return response()->json([
+            'success'    => true,
+            'data'    => $items,
+        ], 200);
     }
 }
