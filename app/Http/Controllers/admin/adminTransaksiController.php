@@ -58,6 +58,7 @@ class adminTransaksiController extends Controller
                 'tglbeli' => $this->req->tglbeli,
                 'penanggungjawab' => $this->req->penanggungjawab,
                 'kodetrans' => $this->kodetrans,
+                'ppn' => 0,
             ]);
             if (count($dataKeranjang) > 0) {
                 $totalbayar = 0;
